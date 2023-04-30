@@ -57,7 +57,7 @@ class BrazeDestination(
 
     override fun update(settings: Settings, type: Plugin.UpdateType) {
         super.update(settings, type)
-        if (settings.hasIntegrationSettings(this)) {
+        if (settings.hasIntegrationSettings(this) || true) {
             analytics.log("Braze Destination is enabled")
             if (type == Plugin.UpdateType.Initial) {
 
