@@ -40,6 +40,8 @@ data class BrazeSettings(
 
 class BrazeDestination(
     private val context: Context,
+    private val apiKey: String? = null,
+    private val endpoint: String? = null,
 ) : DestinationPlugin(), AndroidLifecycle {
 
     @VisibleForTesting
@@ -58,7 +60,14 @@ class BrazeDestination(
         if (settings.hasIntegrationSettings(this)) {
             analytics.log("Braze Destination is enabled")
             if (type == Plugin.UpdateType.Initial) {
-                val brazeSettings: BrazeSettings? = settings.destinationSettings(key)
+
+                val brazeSettings = if (!apiKey.isNullOrEmpty() && !endpoint.isNullOrEmpty()) {
+                    BrazeSettings(apiKey, endpoint, false)
+                } else {
+                    settings.destinationSettings(key)
+                }
+
+
                 if (brazeSettings == null) {
                     analytics.log("Braze Settings not available. Not loading Braze Destination.")
                     return
